@@ -1,0 +1,8 @@
+.vscode/**
+.vs/**
+
+ignore/**
+bin/**
+
+*.obj
+*.o
