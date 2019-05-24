@@ -22,6 +22,8 @@ unsigned long drawTime;
 unsigned long renderTime;
 unsigned long rasterTime;
 
+ImGuiContext *context;
+
 void setup()
 {
     Serial.begin(115200);
@@ -30,6 +32,8 @@ void setup()
     tft.setFont(Terminal6x8);
     tft.setOrientation(3);
     digitalWrite(TFTLED, HIGH);
+
+    context = ImGui::CreateContext();
 
     ImGui_ImplSoftraster_Init(&screen);
 
@@ -75,6 +79,7 @@ void loop()
     io.NavInputs[ImGuiNavInput_TweakFast]   = 0.0f; // faster tweaks                                // e.g. R1 or R2 (PS4), RB or RT (Xbox), R or ZL (Switch)
 
     ImGui_ImplSoftraster_NewFrame();
+    ImGui::NewFrame();
     ImGui::SetWindowPos(ImVec2(0.0, 0.0));
     ImGui::SetWindowSize(ImVec2(TFTX, TFTY));
 
