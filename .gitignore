@@ -3,6 +3,10 @@
 
 ignore/**
 bin/**
+build/**
 
 *.obj
 *.o
+
+sdkconfig
+sdkconfig.old

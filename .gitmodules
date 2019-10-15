@@ -1,3 +1,12 @@
 [submodule "imgui"]
-	path = imgui
+	path = components/imgui
 	url = https://github.com/LAK132/ImSoft.git
+[submodule "components/arduino"]
+	path = components/arduino
+	url = https://github.com/LAK132/arduino-esp32.git
+[submodule "components/TFT_22_ILI9225"]
+	path = components/TFT_22_ILI9225
+	url = https://github.com/LAK132/TFT_22_ILI9225.git
+[submodule "components/ps3"]
+	path = components/ps3
+	url = https://github.com/LAK132/esp32-ps3.git
