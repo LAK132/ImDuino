@@ -17,6 +17,9 @@ const static uint8_t TFTCS  = 15;
 const static uint8_t TFTCLK = 14;
 const static uint8_t TFTSDI = 13;
 
+// Use a tool such as "SixasixPairTool" to set the PS3 controllers MAC adress
+uint8_t ps3PairedMacAddress[6] = {1, 2, 3, 4, 5, 6};
+
 // #define TFTX 220
 // #define TFTY 176
 #define TFTX 220
@@ -148,6 +151,13 @@ void loop()
     // ImGui::Text("Raster time %d ms", (int)rasterTime);
     // ImGui::Text("Remaining time %d ms", deltaTime);
     ImGui::SliderFloat("SliderFloat", &f, 0.0f, 1.0f);
+    ImGui::Text("MAC: %X:%X:%X:%X:%X:%X",
+                (int)ps3PairedMacAddress[0],
+                (int)ps3PairedMacAddress[1],
+                (int)ps3PairedMacAddress[2],
+                (int)ps3PairedMacAddress[3],
+                (int)ps3PairedMacAddress[4],
+                (int)ps3PairedMacAddress[5]);
 
     renderTime = millis();
     ImGui::Render();
@@ -183,9 +193,14 @@ void loop()
 
 extern "C" void app_main()
 {
+    // Have to call something from esp32-hal-bt.c otherwise btInUse() returns
+    // false, causing initArduino() to free the memory for bluetooth
+    btStarted();
+
     initArduino();
     setup();
 
+    ps3SetBluetoothMacAddress(ps3PairedMacAddress);
     ps3SetEventCallback(controller_event_cb);
     ps3Init();
 
