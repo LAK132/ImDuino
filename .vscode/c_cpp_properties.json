@@ -1,0 +1,30 @@
+{
+    "env":{
+        "homepath": "C:/Users/"
+    },
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${localappdata}/Arduino15/packages/esp32/hardware/esp32/1.0.4/cores/esp32/*",
+                "${localappdata}/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/SPI/src/*",
+                "${localappdata}/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/Wire/src/*",
+                "${localappdata}/Arduino15/packages/esp32/hardware/esp32/1.0.4/variants/pocket_32/*",
+                "${localappdata}/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/**",
+                "${homepath}/Documents/Arduino/libraries/TFT_22_ILI9225/src/*",
+                "${homepath}/Documents/Arduino/libraries/Adafruit_SSD1306/*",
+                "${homepath}/Documents/Arduino/libraries/Adafruit_GFX_Library/*",
+                "${homepath}/Documents/Arduino/libraries/Adafruit_BusIO/*"
+            ],
+            "defines": [
+                "ARDUINO=181",
+                "ESP32"
+            ],
+            "windowsSdkVersion": "10.0.18362.0",
+            "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.25.28610/bin/Hostx64/x64/cl.exe",
+            "intelliSenseMode": "msvc-x64"
+        }
+    ],
+    "version": 4
+}
