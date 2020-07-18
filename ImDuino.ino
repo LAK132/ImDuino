@@ -1,6 +1,14 @@
-#include "SPI.h"
-#include <TFT_22_ILI9225.h>
+// #define IMDUINO_TFT_22_ILI9225
+// #define IMDUINO_SSD1306
+
 #include "imgui.h"
+texture_alpha8_t fontAtlas;
+
+#ifdef IMDUINO_TFT_22_ILI9225
+#define SCREENX 220
+#define SCREENY 176
+#include "SPI.h"
+#include "TFT_22_ILI9225.h"
 
 const uint8_t TFTLED = 32;
 const uint8_t TFTRST = 33;
@@ -9,14 +17,62 @@ const uint8_t TFTCS  = 15;
 const uint8_t TFTCLK = 14;
 const uint8_t TFTSDI = 13;
 
-#define TFTX 220
-#define TFTY 176
-
-texture_color16_t screen;
-texture_alpha8_t fontAtlas;
-
 TFT_22_ILI9225 tft = TFT_22_ILI9225(TFTRST, TFTRS, TFTCS, TFTLED, 128);
 SPIClass tftspi(HSPI);
+texture_color16_t screen;
+
+void screen_init()
+{
+    tft.begin(tftspi);
+    tft.setFont(Terminal6x8);
+    tft.setOrientation(3);
+    digitalWrite(TFTLED, HIGH);
+    screen.init(SCREENX, SCREENY);
+}
+
+void screen_draw()
+{
+    tft.drawBitmap(0, 0, (uint16_t *)screen.pixels, screen.w, screen.h);
+}
+#endif
+
+#ifdef IMDUINO_SSD1306
+#define SCREENX 128
+#define SCREENY 64
+#include "Adafruit_SSD1306.h"
+#include "Wire.h"
+
+const uint8_t OLEDSDA  = 5;
+const uint8_t OLEDSCL  = 4;
+const int8_t OLEDRST   = -1;
+const uint8_t OLEDADDR = 0x3C;
+
+const uint8_t OLEDROTATION = 0; // = 2;
+
+Adafruit_SSD1306 oled = Adafruit_SSD1306(SCREENX, SCREENY, &Wire, OLEDRST);
+texture_alpha8_t screen;
+
+void screen_init()
+{
+    Wire.begin(OLEDSDA, OLEDSCL);
+    if (!oled.begin(SSD1306_SWITCHCAPVCC, OLEDADDR, true, false))
+    {
+        Serial.println("SSD1306 allocation failed");
+        for (;;);
+    }
+    screen.init(oled.width(), oled.height());
+    oled.setRotation(OLEDROTATION);
+}
+
+void screen_draw()
+{
+    for (int y = 0; y < SCREENY; ++y)
+        for (int x = 0; x < SCREENX; ++x)
+            oled.drawPixel(x, y, screen.at(x, y).a > 0x7F ? SSD1306_WHITE : SSD1306_BLACK);
+    oled.display();
+}
+
+#endif
 
 unsigned long drawTime;
 unsigned long renderTime;
@@ -27,11 +83,6 @@ ImGuiContext *context;
 void setup()
 {
     Serial.begin(115200);
-
-    tft.begin(tftspi);
-    tft.setFont(Terminal6x8);
-    tft.setOrientation(3);
-    digitalWrite(TFTLED, HIGH);
 
     context = ImGui::CreateContext();
 
@@ -51,11 +102,11 @@ void setup()
     fontAtlas.init(width, height, (alpha8_t*)pixels);
     io.Fonts->TexID = &fontAtlas;
 
-    screen.init(TFTX, TFTY);
+    screen_init();
 }
 
 float f = 0.0f;
-unsigned long time = 0;
+unsigned long t = 0;
 
 void loop()
 {
@@ -81,17 +132,17 @@ void loop()
     ImGui_ImplSoftraster_NewFrame();
     ImGui::NewFrame();
     ImGui::SetWindowPos(ImVec2(0.0, 0.0));
-    ImGui::SetWindowSize(ImVec2(TFTX, TFTY));
+    ImGui::SetWindowSize(ImVec2(SCREENX, SCREENY));
 
     f += 0.05;
     if(f > 1.0f) f = 0.0f;
 
-    unsigned int deltaTime = millis() - time;
-    time += deltaTime;
+    unsigned int deltaTime = millis() - t;
+    t += deltaTime;
 
     deltaTime -= (drawTime + renderTime + rasterTime);
 
-    ImGui::Text("SPI screen draw time %d ms", drawTime);
+    ImGui::Text("Hardware write time %d ms", drawTime);
     ImGui::Text("Render time %d ms", renderTime);
     ImGui::Text("Raster time %d ms", rasterTime);
     ImGui::Text("Remaining time %d ms", deltaTime);
@@ -106,6 +157,6 @@ void loop()
     rasterTime = millis() - rasterTime;
 
     drawTime = millis();
-    tft.drawBitmap(0, 0, (uint16_t*)screen.pixels, screen.w, screen.h);
+    screen_draw();
     drawTime = millis() - drawTime;
 }
