@@ -6,14 +6,21 @@ AlignConsecutiveDeclarations: false
 AlignConsecutiveMacros: true
 AlignEscapedNewlines: Right
 AlignOperands: true
-AlignTrailingComments: true
+AlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 0
 
 AllowAllArgumentsOnNextLine: true
 AllowAllConstructorInitializersOnNextLine: true
 AllowAllParametersOfDeclarationOnNextLine: true
 # AllowShortBlocksOnASingleLine: Empty
 AllowShortCaseLabelsOnASingleLine: true
-AllowShortFunctionsOnASingleLine: Inline
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: true
+  AlignCaseColons: false
+AllowShortFunctionsOnASingleLine: All
 AllowShortIfStatementsOnASingleLine: WithoutElse
 AllowShortLambdasOnASingleLine: All
 AllowShortLoopsOnASingleLine: true
@@ -27,9 +34,9 @@ BinPackParameters: false
 
 BreakBeforeBraces: Custom
 BraceWrapping:
-  AfterCaseLabel: false
+  AfterCaseLabel: true
   AfterClass: true
-  # AfterControlStatement: Always
+  AfterControlStatement: Always
   AfterEnum: true
   AfterFunction: true
   AfterNamespace: true
@@ -38,13 +45,12 @@ BraceWrapping:
   AfterExternBlock: true
   BeforeCatch: true
   BeforeElse: true
-  # BeforeLambdaBody: true
+  BeforeLambdaBody: true
   IndentBraces: false
   SplitEmptyFunction: true
-  SplitEmptyRecord: false
+  SplitEmptyRecord: true
   SplitEmptyNamespace: true
 BreakBeforeBinaryOperators: None
-BreakBeforeBraces: Allman
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeColon
 BreakInheritanceList: BeforeColon
@@ -71,6 +77,7 @@ ExperimentalAutoDetectBinPacking: false
 FixNamespaceComments: false
 
 ForEachMacros: []
+IfMacros: ['do_with', 'do_for', 'for_or', 'range_for_or', 'while_or', 'if_ref', 'if_in', 'if_not_in', 'if_let_ok', 'if_let_some', 'if_let_err']
 
 IncludeBlocks: Preserve
 
@@ -78,6 +85,7 @@ IncludeBlocks: Preserve
 IndentCaseLabels: true
 # IndentGotoLabels: false
 IndentPPDirectives: AfterHash
+IndentRequiresClause: false
 IndentWidth: 2
 IndentWrappedFunctionNames: false
 
@@ -102,6 +110,9 @@ PointerAlignment: Right
 
 ReflowComments: true
 
+RequiresClausePosition: OwnLine
+RequiresExpressionIndentation: OuterScope
+
 SortIncludes: true
 SortUsingDeclarations: true
 
@@ -125,10 +136,10 @@ SpacesInContainerLiterals: false
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
 
-# Standard: c++17
+Standard: c++20
 
 TabWidth: 2
 
 # UseCRLF: false
 
-UseTab: Never
+UseTab: ForIndentation
